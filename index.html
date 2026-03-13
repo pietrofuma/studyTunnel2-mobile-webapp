@@ -1,0 +1,630 @@
+<!DOCTYPE html>
+<html lang="it">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>StudyTunnel</title>
+    <script src="https://unpkg.com/peerjs@1.5.2/dist/peerjs.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        /* Light theme (default) */
+        :root {
+            --bg: #fafafa;
+            --bg-card: #fff;
+            --bg-subtle: #f0f0f0;
+            --text: #1a1a1a;
+            --text-secondary: #888;
+            --text-placeholder: #bbb;
+            --border: #ddd;
+            --border-dashed: #ddd;
+            --accent: #d4b940;
+            --accent-shadow: rgba(212, 185, 64, 0.15);
+            --connected-bg: #e8f5e9;
+            --connected-text: #2e7d32;
+            --error-bg: #fef2f2;
+            --error-text: #c62828;
+            --sent-bg: #e8f5e9;
+            --sent-text: #2e7d32;
+            --sent-border: #2e7d32;
+            --btn-border: #1a1a1a;
+            --btn-disabled-border: #ddd;
+            --btn-disabled-text: #ccc;
+        }
+
+        /* Dark theme */
+        [data-theme="dark"] {
+            --bg: #0a0f1a;
+            --bg-card: #111827;
+            --bg-subtle: #151d2e;
+            --text: #e2e8f0;
+            --text-secondary: #7a8899;
+            --text-placeholder: #3d4d63;
+            --border: #1e2d42;
+            --border-dashed: #283d57;
+            --accent: #60a5fa;
+            --accent-shadow: rgba(96, 165, 250, 0.2);
+            --connected-bg: #0d1f14;
+            --connected-text: #66bb6a;
+            --error-bg: #1f0d0f;
+            --error-text: #ef5350;
+            --sent-bg: #0d1f14;
+            --sent-text: #66bb6a;
+            --sent-border: #66bb6a;
+            --btn-border: #e2e8f0;
+            --btn-disabled-border: #1e2d42;
+            --btn-disabled-text: #3d4d63;
+        }
+
+        html,
+        body {
+            overflow: hidden;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            -webkit-font-smoothing: antialiased;
+            transition: background 0.25s ease, color 0.25s ease;
+        }
+
+        /* Header */
+        .header {
+            padding: 20px 20px 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .header h1 {
+            font-size: 20px;
+            font-weight: 700;
+            letter-spacing: -0.3px;
+            color: var(--text);
+        }
+
+        /* Theme Toggle */
+        .theme-toggle {
+            width: 44px;
+            height: 24px;
+            background: var(--bg-subtle);
+            border: 1.5px solid var(--border);
+            border-radius: 14px;
+            cursor: pointer;
+            position: relative;
+            transition: all 0.25s ease;
+            flex-shrink: 0;
+        }
+
+        .theme-toggle::after {
+            content: '☀️';
+            position: absolute;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            top: 1.5px;
+            left: 2px;
+            font-size: 12px;
+            line-height: 18px;
+            text-align: center;
+            transition: all 0.25s ease;
+        }
+
+        [data-theme="dark"] .theme-toggle::after {
+            content: '🌙';
+            left: 21px;
+        }
+
+        /* ========== HOME SCREEN ========== */
+        #home-screen {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 0 24px;
+        }
+
+        #home-screen.hidden {
+            display: none;
+        }
+
+
+
+        .home-options {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            width: 100%;
+            max-width: 320px;
+        }
+
+        .home-option {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            padding: 20px;
+            background: var(--bg-card);
+            border: 1.5px solid var(--border);
+            border-radius: 16px;
+            cursor: pointer;
+            transition: border-color 0.2s ease, box-shadow 0.2s ease;
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .home-option:active {
+            transform: scale(0.98);
+        }
+
+        .home-option:hover {
+            border-color: var(--accent);
+            box-shadow: 0 2px 12px var(--accent-shadow);
+        }
+
+        .home-option .option-icon {
+            font-size: 28px;
+            line-height: 1;
+            flex-shrink: 0;
+        }
+
+        .home-option .option-info {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .home-option .option-title {
+            font-size: 15px;
+            font-weight: 700;
+            letter-spacing: -0.2px;
+        }
+
+        .home-option .option-desc {
+            font-size: 12px;
+            font-weight: 400;
+            color: var(--text-secondary);
+        }
+
+        /* ========== APP SCREEN (tabs + content) ========== */
+        #app-screen {
+            display: none;
+            flex-direction: column;
+            flex: 1;
+            overflow-y: auto;
+        }
+
+        #app-screen.active {
+            display: flex;
+        }
+
+        .back-btn {
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            font-size: 13px;
+            font-weight: 500;
+            cursor: pointer;
+            padding: 12px 20px 0;
+            font-family: inherit;
+            text-align: left;
+            transition: color 0.15s ease;
+        }
+
+        .back-btn:hover {
+            color: var(--text);
+        }
+
+        /* Status */
+        .status-indicator {
+            text-align: center;
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--text-secondary);
+            padding: 8px 16px;
+            margin: 12px 20px 0;
+            background: var(--bg-subtle);
+            border-radius: 10px;
+            display: inline-block;
+            align-self: center;
+            transition: all 0.2s ease;
+        }
+
+        .status-indicator.connected {
+            background: var(--connected-bg);
+            color: var(--connected-text);
+        }
+
+        .status-indicator.error {
+            background: var(--error-bg);
+            color: var(--error-text);
+        }
+
+        /* Top Home Status */
+        .home-status-custom {
+            margin: 16px auto 0;
+            display: block;
+            width: fit-content;
+        }
+
+        .home-status-custom.hidden {
+            display: none !important;
+        }
+
+        /* Tab Navigation */
+        .tabs {
+            display: flex;
+            margin: 16px 20px 0;
+            background: var(--bg-subtle);
+            border-radius: 12px;
+            padding: 4px;
+            gap: 4px;
+        }
+
+        .tab {
+            flex: 1;
+            padding: 10px 8px;
+            text-align: center;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 13px;
+            color: var(--text-secondary);
+            border-radius: 10px;
+            border: none;
+            background: none;
+            transition: all 0.2s ease;
+            font-family: inherit;
+        }
+
+        .tab.active {
+            background: var(--bg-card);
+            color: var(--text);
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+        }
+
+        .tab:active {
+            transform: scale(0.97);
+        }
+
+        /* Screen Containers */
+        .screen {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            padding: 16px 20px;
+            flex: 1;
+        }
+
+        .screen.active {
+            display: flex;
+        }
+
+        /* Camera */
+        #video {
+            width: 100%;
+            border-radius: 16px;
+            background: var(--bg-subtle);
+            margin-bottom: 16px;
+            border: 1.5px solid var(--border);
+        }
+
+        /* Upload Area */
+        .upload-area {
+            width: 100%;
+            border: 1.5px dashed var(--border-dashed);
+            border-radius: 16px;
+            padding: 32px 16px;
+            text-align: center;
+            background: var(--bg-card);
+            margin-bottom: 16px;
+            transition: border-color 0.2s ease;
+        }
+
+        .upload-area p {
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--text-secondary);
+            margin-bottom: 12px;
+        }
+
+        .btn-select {
+            display: inline-block;
+            background: var(--bg-subtle);
+            color: var(--text);
+            padding: 10px 20px;
+            border-radius: 10px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            border: 1.5px solid var(--border);
+            font-family: inherit;
+            transition: all 0.15s ease;
+        }
+
+        .btn-select:active {
+            transform: scale(0.97);
+        }
+
+        #preview-img {
+            max-width: 100%;
+            max-height: 240px;
+            border-radius: 14px;
+            display: none;
+            margin-bottom: 16px;
+            border: 1.5px solid var(--border);
+        }
+
+        /* Text Input */
+        #text-input {
+            width: 100%;
+            border-radius: 14px;
+            padding: 14px 16px;
+            background: var(--bg-card);
+            color: var(--text);
+            border: 1.5px solid var(--border);
+            margin-bottom: 16px;
+            font-family: inherit;
+            font-size: 15px;
+            font-weight: 400;
+            resize: none;
+            line-height: 1.5;
+            transition: border-color 0.2s ease;
+        }
+
+        #text-input::placeholder {
+            color: var(--text-placeholder);
+        }
+
+        #text-input:focus {
+            outline: none;
+            border-color: var(--accent);
+        }
+
+        /* Main Action Button */
+        .btn-action {
+            width: 100%;
+            padding: 14px;
+            font-size: 15px;
+            font-weight: 700;
+            color: var(--text);
+            background: var(--bg);
+            border: 1.5px solid var(--btn-border);
+            border-radius: 14px;
+            cursor: pointer;
+            font-family: inherit;
+            transition: all 0.15s ease;
+            letter-spacing: -0.2px;
+        }
+
+        .btn-action:active {
+            transform: scale(0.97);
+        }
+
+        .btn-action:disabled {
+            border-color: var(--btn-disabled-border);
+            color: var(--btn-disabled-text);
+            cursor: not-allowed;
+        }
+
+        .btn-action.sent {
+            border-color: var(--sent-border);
+            color: var(--sent-text);
+            background: var(--sent-bg);
+        }
+
+        #canvas {
+            display: none;
+        }
+
+        /* Incoming History */
+        #incoming-history-container {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            width: 100%;
+        }
+
+        .incoming-item {
+            background: var(--bg-card);
+            border: 1.5px solid var(--border);
+            border-radius: 14px;
+            overflow: hidden;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .incoming-text {
+            padding: 12px 14px;
+            font-size: 13px;
+            color: var(--text);
+            word-break: break-word;
+            line-height: 1.5;
+        }
+
+        .incoming-img {
+            width: 100%;
+            height: auto;
+            max-height: 200px;
+            object-fit: contain;
+            background: #000;
+        }
+
+        .incoming-file {
+            padding: 14px;
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--text);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            word-break: break-word;
+        }
+
+        .incoming-btn {
+            padding: 10px;
+            background: var(--bg-subtle);
+            color: var(--text);
+            border: none;
+            border-top: 1px solid var(--border);
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            font-family: inherit;
+            transition: background 0.15s ease;
+        }
+
+        .incoming-btn:active {
+            background: var(--border);
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="header">
+        <h1>StudyTunnel</h1>
+        <div class="theme-toggle" id="theme-toggle" title="Cambia tema"></div>
+    </div>
+    <!-- Global Home Status -->
+    <p id="home-status" class="status-indicator home-status-custom">In attesa del computer...</p>
+
+    <!-- ========== HOME SCREEN ========== -->
+    <div id="home-screen">
+        <div class="home-options">
+            <div class="home-option" onclick="enterApp('camera')">
+                <span class="option-icon">📷</span>
+                <div class="option-info">
+                    <span class="option-title">Foto</span>
+                    <span class="option-desc">Scatta e invia una foto</span>
+                </div>
+            </div>
+            <div class="home-option" onclick="enterApp('upload')">
+                <span class="option-icon">📂</span>
+                <div class="option-info">
+                    <span class="option-title">File</span>
+                    <span class="option-desc">Carica un file dalla memoria</span>
+                </div>
+            </div>
+            <div class="home-option" onclick="enterApp('text')">
+                <span class="option-icon">📝</span>
+                <div class="option-info">
+                    <span class="option-title">Testo</span>
+                    <span class="option-desc">Scrivi o incolla del testo</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- SEZIONE RICEVUTI -->
+        <div id="received-section" style="display: none; width: 100%; max-width: 320px; margin-top: 24px;">
+            <h3 style="font-size: 14px; color: var(--text-secondary); margin-bottom: 12px; font-weight: 600;">Ricevuti
+                dal PC</h3>
+            <div id="incoming-history-container">
+                <!-- Messaggi incoming -->
+            </div>
+        </div>
+    </div>
+
+    <!-- ========== APP SCREEN ========== -->
+    <div id="app-screen">
+        <button class="back-btn" onclick="goHome()">← Indietro</button>
+
+        <!-- Tab Navigation -->
+        <div class="tabs">
+            <div class="tab active" onclick="switchTab('camera')">📷 Foto</div>
+            <div class="tab" onclick="switchTab('upload')">📂 File</div>
+            <div class="tab" onclick="switchTab('text')">📝 Testo</div>
+        </div>
+
+        <!-- SCREEN 1: Camera -->
+        <div id="screen-camera" class="screen active">
+            <video id="video" autoplay playsinline></video>
+            <button id="btn-scatta" class="btn-action">Scatta e Invia</button>
+        </div>
+
+        <!-- SCREEN 2: Upload -->
+        <div id="screen-upload" class="screen">
+            <div class="upload-area">
+                <p id="file-name-display">Cosa vuoi caricare?</p>
+                <label for="universal-input" class="btn-select">
+                    📁 Sfoglia Memoria
+                </label>
+                <input type="file" id="universal-input" style="display: none;">
+            </div>
+            <img id="preview-img" alt="Anteprima">
+            <button id="btn-upload-send" class="btn-action" disabled>Invia al PC</button>
+        </div>
+
+        <!-- SCREEN 3: Text -->
+        <div id="screen-text" class="screen">
+            <textarea id="text-input" placeholder="Scrivi o incolla qui..." rows="8"></textarea>
+            <button id="btn-send-text" class="btn-action">Invia Testo</button>
+        </div>
+    </div>
+
+    <canvas id="canvas"></canvas>
+
+    <script src="logic.js?v=2"></script>
+    <script>
+        // Theme toggle
+        function applyTheme(theme) {
+            document.documentElement.setAttribute('data-theme', theme);
+        }
+
+        const savedTheme = localStorage.getItem('studytunnel-theme') || 'light';
+        applyTheme(savedTheme);
+
+        document.getElementById('theme-toggle').addEventListener('click', () => {
+            const current = document.documentElement.getAttribute('data-theme') || 'light';
+            const next = current === 'light' ? 'dark' : 'light';
+            applyTheme(next);
+            localStorage.setItem('studytunnel-theme', next);
+        });
+
+        // Home → App navigation
+        function enterApp(mode) {
+            document.getElementById('home-screen').classList.add('hidden');
+            document.getElementById('home-status').classList.add('hidden');
+            document.getElementById('app-screen').classList.add('active');
+            switchTab(mode);
+        }
+
+        function goHome() {
+            document.getElementById('app-screen').classList.remove('active');
+            document.getElementById('home-screen').classList.remove('hidden');
+            document.getElementById('home-status').classList.remove('hidden');
+        }
+
+        // Tab switching
+        function switchTab(mode) {
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+
+            if (mode === 'camera') {
+                document.querySelectorAll('.tab')[0].classList.add('active');
+                document.getElementById('screen-camera').classList.add('active');
+            } else if (mode === 'upload') {
+                document.querySelectorAll('.tab')[1].classList.add('active');
+                document.getElementById('screen-upload').classList.add('active');
+            } else if (mode === 'text') {
+                document.querySelectorAll('.tab')[2].classList.add('active');
+                document.getElementById('screen-text').classList.add('active');
+            }
+        }
+    </script>
+</body>
+
+</html>
