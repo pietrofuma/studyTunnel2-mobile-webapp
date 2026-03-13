@@ -133,13 +133,19 @@
             flex: 1;
             display: flex;
             flex-direction: column;
-            align-items: center;
-            justify-content: center;
             padding: 0 24px;
+            overflow: hidden; /* Prevent body scroll, handle scroll internally */
         }
 
         #home-screen.hidden {
             display: none;
+        }
+
+        /* Top fixed section of Home Screen */
+        .home-top-section {
+            padding-top: 10px;
+            padding-bottom: 20px;
+            flex-shrink: 0;
         }
 
 
@@ -421,7 +427,15 @@
             display: none;
         }
 
-        /* Incoming History */
+        /* Incoming History Container */
+        #received-section {
+            flex: 1;
+            overflow-y: auto;
+            border-top: 1.5px dashed var(--border-dashed);
+            padding-top: 24px;
+            padding-bottom: 24px;
+        }
+
         #incoming-history-container {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -437,6 +451,7 @@
             box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
             display: flex;
             flex-direction: column;
+            height: 160px; /* Fixed height for uniformity */
         }
 
         .incoming-text {
@@ -445,18 +460,24 @@
             color: var(--text);
             word-break: break-word;
             line-height: 1.5;
+            flex: 1;
+            overflow: hidden;
+            display: -webkit-box;
+            -webkit-line-clamp: 4;
+            line-clamp: 4;
+            -webkit-box-orient: vertical;
         }
 
         .incoming-img {
             width: 100%;
-            height: auto;
-            max-height: 200px;
+            height: 100px; /* Fixed image area */
             object-fit: contain;
             background: #000;
+            flex: 1;
         }
 
         .incoming-file {
-            padding: 14px;
+            padding: 12px 14px;
             font-size: 13px;
             font-weight: 500;
             color: var(--text);
@@ -464,10 +485,12 @@
             align-items: center;
             gap: 10px;
             word-break: break-word;
+            flex: 1;
+            overflow: hidden;
         }
 
         .incoming-btn {
-            padding: 10px;
+            padding: 12px 10px;
             background: var(--bg-subtle);
             color: var(--text);
             border: none;
@@ -477,6 +500,10 @@
             cursor: pointer;
             font-family: inherit;
             transition: background 0.15s ease;
+            width: 100%;
+            margin-top: auto; /* Push to bottom */
+            flex-shrink: 0;
+            text-align: center;
         }
 
         .incoming-btn:active {
@@ -518,23 +545,25 @@
 
     <!-- ========== HOME SCREEN ========== -->
     <div id="home-screen">
-        <div class="home-options" style="margin-top: -10px; margin-bottom: 20px;">
-            <div class="home-option" onclick="enterApp('camera')">
-                <span class="option-icon">📷</span>
-                <span class="option-title">Foto</span>
-            </div>
-            <div class="home-option" onclick="enterApp('upload')">
-                <span class="option-icon">📂</span>
-                <span class="option-title">File</span>
-            </div>
-            <div class="home-option" onclick="enterApp('text')">
-                <span class="option-icon">📝</span>
-                <span class="option-title">Testo</span>
+        <div class="home-top-section">
+            <div class="home-options">
+                <div class="home-option" onclick="enterApp('camera')">
+                    <span class="option-icon">📷</span>
+                    <span class="option-title">Foto</span>
+                </div>
+                <div class="home-option" onclick="enterApp('upload')">
+                    <span class="option-icon">📂</span>
+                    <span class="option-title">File</span>
+                </div>
+                <div class="home-option" onclick="enterApp('text')">
+                    <span class="option-icon">📝</span>
+                    <span class="option-title">Testo</span>
+                </div>
             </div>
         </div>
 
         <!-- SEZIONE RICEVUTI -->
-        <div id="received-section" style="display: none; width: 100%; max-width: 320px; border-top: 1.5px dashed var(--border-dashed); padding-top: 24px;">
+        <div id="received-section" style="display: none;">
             <h3 style="font-size: 14px; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-secondary); margin-bottom: 16px; font-weight: 700;">Ricevuti dal PC</h3>
             <div id="incoming-history-container">
                 <!-- Messaggi incoming -->
