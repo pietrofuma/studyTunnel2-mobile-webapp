@@ -202,7 +202,44 @@ function handleIncomingData(item) {
 
     // Aggiungi in cima
     incomingContainer.insertBefore(itemDiv, incomingContainer.firstChild);
+
+    // Controlla se siamo nella home
+    const isHome = !document.getElementById('home-screen').classList.contains('hidden');
+    if (!isHome) {
+        showNewItemToast();
+    }
 }
+
+// Gestione Toast Notifica
+const toast = document.getElementById('new-item-toast');
+let toastTimeout;
+
+function showNewItemToast() {
+    toast.style.display = 'block';
+    // Forza il reflow per l'animazione css
+    void toast.offsetWidth;
+    toast.style.opacity = '1';
+
+    clearTimeout(toastTimeout);
+    toastTimeout = setTimeout(() => {
+        hideToast();
+    }, 4000); // Nascondi dopo 4 secondi
+}
+
+function hideToast() {
+    toast.style.opacity = '0';
+    setTimeout(() => {
+        toast.style.display = 'none';
+    }, 300); // Attendi fine transizione
+}
+
+// Cliccando il toast torni alla home per vedere il file
+toast.addEventListener('click', () => {
+    hideToast();
+    if (typeof goHome === 'function') {
+        goHome();
+    }
+});
 
 function copyText(text, btnElement) {
     navigator.clipboard.writeText(text).then(() => {
