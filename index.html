@@ -502,6 +502,28 @@
     <!-- Global Home Status -->
     <p id="home-status" class="status-indicator home-status-custom">In attesa del computer...</p>
 
+    <!-- Notifica Push Mobile -->
+    <div id="new-item-toast" style="
+        display: none;
+        position: fixed;
+        top: 20px;
+        left: 50%;
+        transform: translateX(-50%);
+        background: var(--accent);
+        color: #fff;
+        padding: 12px 24px;
+        border-radius: 12px;
+        font-weight: 600;
+        font-size: 14px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        z-index: 1000;
+        cursor: pointer;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+    ">
+        ✨ Nuovo file dal PC! (Tocca qui)
+    </div>
+
     <!-- ========== HOME SCREEN ========== -->
     <div id="home-screen">
         <div class="home-options">
