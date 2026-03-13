@@ -146,17 +146,21 @@
 
         .home-options {
             display: flex;
-            flex-direction: column;
+            flex-direction: row;
             gap: 12px;
             width: 100%;
             max-width: 320px;
+            justify-content: space-between;
         }
 
         .home-option {
+            flex: 1;
             display: flex;
+            flex-direction: column;
             align-items: center;
-            gap: 16px;
-            padding: 20px;
+            justify-content: center;
+            gap: 8px;
+            padding: 20px 10px;
             background: var(--bg-card);
             border: 1.5px solid var(--border);
             border-radius: 16px;
@@ -178,25 +182,13 @@
         .home-option .option-icon {
             font-size: 28px;
             line-height: 1;
-            flex-shrink: 0;
-        }
-
-        .home-option .option-info {
-            display: flex;
-            flex-direction: column;
-            gap: 2px;
         }
 
         .home-option .option-title {
-            font-size: 15px;
+            font-size: 14px;
             font-weight: 700;
             letter-spacing: -0.2px;
-        }
-
-        .home-option .option-desc {
-            font-size: 12px;
-            font-weight: 400;
-            color: var(--text-secondary);
+            text-align: center;
         }
 
         /* ========== APP SCREEN (tabs + content) ========== */
@@ -431,8 +423,8 @@
 
         /* Incoming History */
         #incoming-history-container {
-            display: flex;
-            flex-direction: column;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
             gap: 12px;
             width: 100%;
         }
@@ -526,34 +518,24 @@
 
     <!-- ========== HOME SCREEN ========== -->
     <div id="home-screen">
-        <div class="home-options">
+        <div class="home-options" style="margin-top: -10px; margin-bottom: 20px;">
             <div class="home-option" onclick="enterApp('camera')">
                 <span class="option-icon">📷</span>
-                <div class="option-info">
-                    <span class="option-title">Foto</span>
-                    <span class="option-desc">Scatta e invia una foto</span>
-                </div>
+                <span class="option-title">Foto</span>
             </div>
             <div class="home-option" onclick="enterApp('upload')">
                 <span class="option-icon">📂</span>
-                <div class="option-info">
-                    <span class="option-title">File</span>
-                    <span class="option-desc">Carica un file dalla memoria</span>
-                </div>
+                <span class="option-title">File</span>
             </div>
             <div class="home-option" onclick="enterApp('text')">
                 <span class="option-icon">📝</span>
-                <div class="option-info">
-                    <span class="option-title">Testo</span>
-                    <span class="option-desc">Scrivi o incolla del testo</span>
-                </div>
+                <span class="option-title">Testo</span>
             </div>
         </div>
 
         <!-- SEZIONE RICEVUTI -->
-        <div id="received-section" style="display: none; width: 100%; max-width: 320px; margin-top: 24px;">
-            <h3 style="font-size: 14px; color: var(--text-secondary); margin-bottom: 12px; font-weight: 600;">Ricevuti
-                dal PC</h3>
+        <div id="received-section" style="display: none; width: 100%; max-width: 320px; border-top: 1.5px dashed var(--border-dashed); padding-top: 24px;">
+            <h3 style="font-size: 14px; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-secondary); margin-bottom: 16px; font-weight: 700;">Ricevuti dal PC</h3>
             <div id="incoming-history-container">
                 <!-- Messaggi incoming -->
             </div>
