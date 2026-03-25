@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Privacy Policy - StudyTunnel2</title>
+    <style>
+        body { font-family: sans-serif; line-height: 1.6; max-width: 800px; margin: 40px auto; padding: 0 20px; color: #333; }
+        h1 { color: #222; }
+        .highlight { background: #f4f4f4; padding: 15px; border-radius: 8px; border-left: 5px solid #2ecc71; }
+    </style>
+</head>
+<body>
+    <h1>Privacy Policy - StudyTunnel2</h1>
+    <p>Ultimo aggiornamento: 25 Marzo 2026</p>
+    
+    <div class="highlight">
+        <strong>In breve:</strong> StudyTunnel2 non raccoglie, non salva e non condivide alcun dato personale o file dell'utente. La trasmissione avviene direttamente tra i tuoi dispositivi (Peer-to-Peer).
+    </div>
+
+    <h2>1. Raccolta dei Dati</h2>
+    <p>L'estensione StudyTunnel2 e la relativa Web App non richiedono la creazione di un account né l'inserimento di dati personali (nome, email, ecc.). Tutti i file e i testi inviati tramite l'applicazione rimangono privati.</p>
+
+    <h2>2. Trasmissione dei Dati (P2P)</h2>
+    <p>I dati vengono inviati utilizzando la tecnologia <strong>WebRTC (Peer-to-Peer)</strong> tramite la libreria PeerJS. Questo significa che il file passa direttamente dal tuo telefono al tuo computer (o viceversa) senza mai fermarsi su un server centrale.</p>
+    <p>I server di PeerJS vengono utilizzati esclusivamente per mettere in contatto i due dispositivi (fase di "handshake") tramite un ID univoco temporaneo, ma non hanno accesso al contenuto dei dati trasmessi.</p>
+
+    <h2>3. Sicurezza</h2>
+    <p>La connessione P2P è crittografata end-to-end per impostazione predefinita dal protocollo WebRTC. Inoltre, abbiamo implementato un sistema di <strong>Token Segreto</strong>: solo il dispositivo che scansiona il tuo QR Code unico può comunicare con la tua estensione.</p>
+
+    <h2>4. Permessi dell'Estensione</h2>
+    <ul>
+        <li><strong>clipboardWrite:</strong> Utilizzato solo per permetterti di copiare velocemente il testo o l'immagine ricevuta negli appunti.</li>
+        <li><strong>storage:</strong> Utilizzato per salvare localmente la cronologia degli ultimi 10 elementi ricevuti sul tuo computer. Questi dati non lasciano mai il tuo dispositivo.</li>
+    </ul>
+
+    <h2>5. Contatti</h2>
+    <p>Per qualsiasi domanda, puoi contattare lo sviluppatore tramite il repository GitHub del progetto.</p>
+</body>
+</html>
