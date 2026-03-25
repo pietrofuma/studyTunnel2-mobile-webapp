@@ -25,8 +25,9 @@ let conn;
 // --- 1. CONNESSIONE AL PC ---
 const urlParams = new URLSearchParams(window.location.search);
 const targetPeerId = urlParams.get('id');
+const authToken = urlParams.get('token');
 
-if (!targetPeerId) {
+if (!targetPeerId || !authToken) {
     updateStatus("❌ Nessun ID. Scansiona il QR Code!", "error");
 } else {
     // TORNATO ALLA NORMALITA'
@@ -37,11 +38,17 @@ if (!targetPeerId) {
         conn = peer.connect(targetPeerId);
 
         conn.on('open', () => {
-            updateStatus("✅ Connesso al PC!", "connected");
-            document.getElementById('received-section').style.display = 'block';
+            updateStatus("Autenticazione in corso...");
+            // Esegue handshake di sicurezza
+            conn.send({ type: 'auth', token: authToken });
         });
         
         conn.on('data', (data) => {
+            if (data && data.type === 'auth_success') {
+                updateStatus("✅ Connesso Sicuro!", "connected");
+                document.getElementById('received-section').style.display = 'block';
+                return;
+            }
             handleIncomingData(data);
         });
 
