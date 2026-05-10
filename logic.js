@@ -118,7 +118,7 @@ function getSessionParams() {
     return {
         id,
         token,
-        fromQuery: !hashParams.get('id') && Boolean(queryParams.get('id') || queryParams.get('token'))
+        fromQuery: Boolean(queryParams.get('id') || queryParams.get('token'))
     };
 }
 
