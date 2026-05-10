@@ -12,26 +12,27 @@
 </head>
 <body>
     <h1>Privacy Policy - StudyTunnel2</h1>
-    <p>Ultimo aggiornamento: 25 Marzo 2026</p>
+    <p>Ultimo aggiornamento: 10 Maggio 2026</p>
     
     <div class="highlight">
-        <strong>In breve:</strong> StudyTunnel2 non raccoglie, non salva e non condivide alcun dato personale o file dell'utente. La trasmissione avviene direttamente tra i tuoi dispositivi (Peer-to-Peer).
+        <strong>In breve:</strong> StudyTunnel2 non richiede account e non carica online i tuoi file. I contenuti ricevuti dal computer vengono salvati solo in locale, nella cronologia degli ultimi 10 elementi dell'estensione.
     </div>
 
     <h2>1. Raccolta dei Dati</h2>
-    <p>L'estensione StudyTunnel2 e la relativa Web App non richiedono la creazione di un account né l'inserimento di dati personali (nome, email, ecc.). Tutti i file e i testi inviati tramite l'applicazione rimangono privati.</p>
+    <p>L'estensione StudyTunnel2 e la relativa Web App non richiedono la creazione di un account né l'inserimento di dati personali (nome, email, ecc.). File e testi non vengono salvati su server di StudyTunnel2.</p>
 
     <h2>2. Trasmissione dei Dati (P2P)</h2>
-    <p>I dati vengono inviati utilizzando la tecnologia <strong>WebRTC (Peer-to-Peer)</strong> tramite la libreria PeerJS. Questo significa che il file passa direttamente dal tuo telefono al tuo computer (o viceversa) senza mai fermarsi su un server centrale.</p>
+    <p>I dati vengono inviati utilizzando la tecnologia <strong>WebRTC (Peer-to-Peer)</strong> tramite la libreria PeerJS. Il contenuto trasferito non viene caricato su un server applicativo di StudyTunnel2.</p>
     <p>I server di PeerJS vengono utilizzati esclusivamente per mettere in contatto i due dispositivi (fase di "handshake") tramite un ID univoco temporaneo, ma non hanno accesso al contenuto dei dati trasmessi.</p>
 
     <h2>3. Sicurezza</h2>
-    <p>La connessione P2P è crittografata end-to-end per impostazione predefinita dal protocollo WebRTC. Inoltre, abbiamo implementato un sistema di <strong>Token Segreto</strong>: solo il dispositivo che scansiona il tuo QR Code unico può comunicare con la tua estensione.</p>
+    <p>La connessione P2P è crittografata dal protocollo WebRTC. Inoltre, StudyTunnel2 usa un <strong>Token Segreto temporaneo</strong>: il token viene inserito nel QR Code e scade dopo l'abbinamento o quando generi una nuova connessione.</p>
 
     <h2>4. Permessi dell'Estensione</h2>
     <ul>
         <li><strong>clipboardWrite:</strong> Utilizzato solo per permetterti di copiare velocemente il testo o l'immagine ricevuta negli appunti.</li>
-        <li><strong>storage:</strong> Utilizzato per salvare localmente la cronologia degli ultimi 10 elementi ricevuti sul tuo computer. Questi dati non lasciano mai il tuo dispositivo.</li>
+        <li><strong>storage:</strong> Utilizzato per salvare localmente tema, stato della connessione e cronologia degli ultimi 10 elementi ricevuti sul tuo computer.</li>
+        <li><strong>unlimitedStorage:</strong> Utilizzato per evitare limiti troppo stretti durante il salvataggio locale di file ricevuti, entro i limiti applicativi di sicurezza.</li>
     </ul>
 
     <h2>5. Contatti</h2>
